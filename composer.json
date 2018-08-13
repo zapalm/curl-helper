@@ -1,0 +1,38 @@
+{
+  "name": "zapalm/curlHelper",
+  "type": "library",
+  "description": "The simple PHP-library to do HTTP-requests.",
+  "keywords": [
+    "CURL",
+    "helper"
+  ],
+  "homepage": "https://github.com/zapalm/curlHelper",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maksim T.",
+      "email": "zapalm@yandex.com",
+      "role": "Developer"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/zapalm/curlHelper"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "zapalm\\curlHelper\\": ""
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "5.4"
+    }
+  }
+}
