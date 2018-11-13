@@ -28,7 +28,7 @@ namespace zapalm\curlHelper;
  * }
  * ~~~
  *
- * @version 0.35.0
+ * @version 0.37.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -534,6 +534,42 @@ class CurlHelper
     {
         $this->setSleepMinSeconds($min);
         $this->setSleepMaxSeconds($max);
+
+        return $this;
+    }
+
+    /**
+     * Установить файл для хранения Cookie.
+     *
+     * @param string $value
+     *
+     * @return $this
+     *
+     * @see setCookieFile()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setCookieJar($value)
+    {
+        $this->setOption(CURLOPT_COOKIEJAR, $value);
+
+        return $this;
+    }
+
+    /**
+     * Установить файл для хранения Cookie.
+     *
+     * @param string $value
+     *
+     * @return $this
+     *
+     * @see setCookieJar()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setCookieFile($value)
+    {
+        $this->setOption(CURLOPT_COOKIEFILE, $value);
 
         return $this;
     }
