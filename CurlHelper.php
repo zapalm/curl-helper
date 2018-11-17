@@ -619,6 +619,18 @@ class CurlHelper
     }
 
     /**
+     * Получить код ответа веб-сервера.
+     *
+     * @return int
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getHttpCode()
+    {
+        return curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+    }
+
+    /**
      * Получить время выполнения запроса (в секундах).
      *
      * @return int
