@@ -445,7 +445,7 @@ class CurlHelper
         $this->setOption(CURLOPT_SSL_VERIFYPEER, $value);
         $this->setOption(CURLOPT_SSL_VERIFYHOST, (false === $value ? 0 : 2));
 
-        if (version_compare(curl_version()['version'], '7.41.0', '>=')) {
+        if (defined('CURLOPT_SSL_VERIFYSTATUS')) {
             $this->setOption(CURLOPT_SSL_VERIFYSTATUS, $value); // This option is currently only supported by the OpenSSL, GnuTLS and NSS TLS backends.
         }
 
