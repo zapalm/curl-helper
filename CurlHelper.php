@@ -63,6 +63,9 @@ class CurlHelper
     public function __construct()
     {
         $this->curl = curl_init();
+
+        $this->setConnectTimeOut(10);
+        $this->setTimeOut(30);
     }
 
     /**
