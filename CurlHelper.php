@@ -578,6 +578,26 @@ class CurlHelper
     }
 
     /**
+     * Установить файл сертификата.
+     *
+     * @param string $filePath Путь к файлу сертификата.
+     *
+     * @return $this
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setCaInfo($filePath)
+    {
+        if (false === file_exists($filePath)) {
+            throw new \InvalidArgumentException('Файл сертификата не найден: ' . $filePath);
+        }
+
+        $this->setOption(CURLOPT_CAINFO, $filePath);
+
+        return $this;
+    }
+
+    /**
      * Выполнить запрос.
      *
      * @return bool|string
