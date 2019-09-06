@@ -62,7 +62,7 @@ class CurlHelper
      */
     public function __construct()
     {
-        $this->curl = curl_init();
+        $this->curl = curl_init(); // Никогда не возвращает false, поэтому проверка не нужна: https://github.com/phpstan/phpstan/issues/1274
 
         $this->setConnectTimeOut(10);
         $this->setTimeOut(30);
