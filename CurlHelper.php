@@ -438,7 +438,7 @@ class CurlHelper
     /**
      * Установить опции, проверять или нет SSL.
      *
-     * @param bool $value
+     * @param bool $value Указать true, чтобы не проверять SSL, иначе - false.
      *
      * @return $this
      *
