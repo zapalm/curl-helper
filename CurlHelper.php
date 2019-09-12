@@ -28,7 +28,7 @@ namespace zapalm\curlHelper;
  * }
  * ~~~
  *
- * @version 0.37.0
+ * @version 0.38.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -66,6 +66,7 @@ class CurlHelper
 
         $this->setConnectTimeOut(10);
         $this->setTimeOut(30);
+        $this->setCaInfo(__DIR__ . '/certificates/Mozilla_CA_certificate.pem');
     }
 
     /**
