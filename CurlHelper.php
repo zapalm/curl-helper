@@ -382,7 +382,9 @@ class CurlHelper
      */
     public function setFollowLocation($value)
     {
-        $this->setOption(CURLOPT_FOLLOWLOCATION, $value);
+        if ('' === trim(ini_get('open_basedir')) && false === in_array(strtolower(ini_get('safe_mode')), array('1', 'on', 'yes', 'true'), true)) {
+            $this->setOption(CURLOPT_FOLLOWLOCATION, $value);
+        }
 
         return $this;
     }
