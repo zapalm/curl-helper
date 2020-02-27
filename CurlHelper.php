@@ -138,7 +138,7 @@ class CurlHelper
                 continue;
             }
 
-            throw new \InvalidArgumentException('Неудалось установить параметр ' . $param . ' = ' . $value);
+            throw new \InvalidArgumentException('Не удалось установить параметр ' . $param . ' = ' . $value);
         }
     }
 
@@ -160,7 +160,7 @@ class CurlHelper
             return;
         }
 
-        throw new \InvalidArgumentException('Неудалось установить опцию ' . $option . ' = ' . $value);
+        throw new \InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . $value);
     }
 
     /**
