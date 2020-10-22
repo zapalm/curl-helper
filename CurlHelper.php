@@ -615,6 +615,7 @@ class CurlHelper
 
         $this->startTime = microtime(true);
         $result          = curl_exec($this->curl);
+        $result          = str_replace("\xEF\xBB\xBF", '', $result); // Removing UTF BOM (byte-order mark)
         $this->endTime   = microtime(true);
 
         return $result;
