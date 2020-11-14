@@ -84,7 +84,7 @@ class CurlHelper
     /**
      * Экспортировать опции настройки cUrl.
      *
-     * @return string[]
+     * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -147,8 +147,8 @@ class CurlHelper
     /**
      * Установить опцию.
      *
-     * @param int    $option
-     * @param string $value
+     * @param int             $option
+     * @param string|string[] $value
      *
      * @throws InvalidArgumentException
      *
@@ -162,7 +162,7 @@ class CurlHelper
             return;
         }
 
-        throw new InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . $value);
+        throw new InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . print_r($value, true));
     }
 
     /**
