@@ -21,12 +21,12 @@ Add the dependency directly to your `composer.json` file:
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/zapalm/curlHelper"
+    "url": "https://github.com/zapalm/curl-helper"
   }
 ],
 "require": {
   "php": ">=5.4",
-  "zapalm/curlHelper": "dev-master"
+  "zapalm/curl-helper": "dev-master"
 },
 ```
 
@@ -65,5 +65,5 @@ Contributors wishing to edit the project's files should follow the following pro
 
 [1]: https://www.php-fig.org/psr/
 [2]: https://www.patreon.com/zapalm
-[3]: https://prestashop.modulez.ru/en/contact-us
+[3]: https://zapalm.ru
 [4]: https://help.github.com/articles/about-pull-requests/
