@@ -10,6 +10,8 @@
 
 namespace zapalm\curlHelper;
 
+use InvalidArgumentException;
+
 /**
  * CURL helper.
  *
@@ -123,7 +125,7 @@ class CurlHelper
      *
      * @param string[] $params
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -138,7 +140,7 @@ class CurlHelper
                 continue;
             }
 
-            throw new \InvalidArgumentException('Не удалось установить параметр ' . $param . ' = ' . $value);
+            throw new InvalidArgumentException('Не удалось установить параметр ' . $param . ' = ' . $value);
         }
     }
 
@@ -148,7 +150,7 @@ class CurlHelper
      * @param int    $option
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -160,7 +162,7 @@ class CurlHelper
             return;
         }
 
-        throw new \InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . $value);
+        throw new InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . $value);
     }
 
     /**
@@ -592,7 +594,7 @@ class CurlHelper
     public function setCaInfo($filePath)
     {
         if (false === file_exists($filePath)) {
-            throw new \InvalidArgumentException('Файл сертификата не найден: ' . $filePath);
+            throw new InvalidArgumentException('Файл сертификата не найден: ' . $filePath);
         }
 
         $this->setOption(CURLOPT_CAINFO, $filePath);
