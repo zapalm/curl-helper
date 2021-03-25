@@ -5,12 +5,12 @@
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
- * @link      https://github.com/zapalm/CurlHelper GitHub
+ * @link      https://github.com/zapalm/curl-helper GitHub
  */
 
 namespace zapalm\curlHelper;
 
-use InvalidArgumentException;
+use LogicException;
 
 /**
  * CURL helper.
@@ -30,32 +30,32 @@ use InvalidArgumentException;
  * }
  * ~~~
  *
- * @version 0.39.0
+ * @version 0.47.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class CurlHelper
 {
-    /** @var resource Ресурс curl */
-    private $curl;
+    /** @var resource Ресурс CURL. */
+    protected $curl;
 
-    /** @var string[] Опции настройки cUrl */
+    /** @var string[] Опции настройки CURL. */
     private $options = [];
 
-    /** @var string[] Параметры запроса */
+    /** @var string[] Параметры запроса. */
     private $params = [];
 
-    /** @var int Максимальная пауза между запросами (в секундах) */
-    private $sleepMaxSeconds;
+    /** @var int Максимальная пауза между запросами (в секундах). */
+    protected $sleepMaxSeconds;
 
-    /** @var int Минимальная пауза между запросами (в секундах) */
-    private $sleepMinSeconds;
+    /** @var int Минимальная пауза между запросами (в секундах). */
+    protected $sleepMinSeconds;
 
-    /** @var float Начало запроса */
-    private $startTime;
+    /** @var float Начало запроса. */
+    protected $startTime;
 
-    /** @var float Окончание запроса */
-    private $endTime;
+    /** @var float Окончание запроса. */
+    protected $endTime;
 
     /**
      * Конструктор.
@@ -82,9 +82,9 @@ class CurlHelper
     }
 
     /**
-     * Экспортировать опции настройки cUrl.
+     * Экспортировать опции настройки CURL.
      *
-     * @return array
+     * @return string[]
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -106,7 +106,7 @@ class CurlHelper
     }
 
     /**
-     * Импортировать опции настройки cUrl.
+     * Импортировать опции настройки CURL.
      *
      * @param string[] $options
      *
@@ -125,7 +125,7 @@ class CurlHelper
      *
      * @param string[] $params
      *
-     * @throws InvalidArgumentException
+     * @throws LogicException
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -140,7 +140,7 @@ class CurlHelper
                 continue;
             }
 
-            throw new InvalidArgumentException('Не удалось установить параметр ' . $param . ' = ' . $value);
+            throw new LogicException('Не удалось установить параметр ' . $param . ' = ' . $value);
         }
     }
 
@@ -150,11 +150,11 @@ class CurlHelper
      * @param int             $option
      * @param string|string[] $value
      *
-     * @throws InvalidArgumentException
+     * @throws LogicException
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    private function setOption($option, $value)
+    protected function setOption($option, $value)
     {
         if (curl_setopt($this->curl, $option, $value)) {
             $this->options[$option] = $value;
@@ -162,7 +162,7 @@ class CurlHelper
             return;
         }
 
-        throw new InvalidArgumentException('Не удалось установить опцию ' . $option . ' = ' . print_r($value, true));
+        throw new LogicException('Не удалось установить опцию ' . $option . ' = ' . $value);
     }
 
     /**
@@ -214,9 +214,9 @@ class CurlHelper
     }
 
     /**
-     * Установить HTTP-заголовок.
+     * Установить HTTP-заголовки.
      *
-     * @param string[] $value
+     * @param string[] $value Список заголовков.
      *
      * @return $this
      *
@@ -394,7 +394,7 @@ class CurlHelper
     /**
      * Установить proxy.
      *
-     * @param string $value Строка адреса в формате IP:port
+     * @param string $value Строка адреса в формате IP:port.
      *
      * @return $this
      *
@@ -408,9 +408,9 @@ class CurlHelper
     }
 
     /**
-     * Установить тип прокси (CURLPROXY_HTTP, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4).
+     * Установить тип прокси.
      *
-     * @param int $value
+     * @param int $value Варианты констант: CURLPROXY_HTTP, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4.
      *
      * @return $this
      *
@@ -419,6 +419,60 @@ class CurlHelper
     public function setProxyType($value)
     {
         $this->setOption(CURLOPT_PROXYTYPE, $value);
+
+        return $this;
+    }
+
+    /**
+     * Установить пользователя прокси.
+     *
+     * @param int $value
+     *
+     * @return $this
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setProxyUser($value)
+    {
+        $this->setOption(CURLOPT_PROXYUSERNAME, $value);
+
+        return $this;
+    }
+
+    /**
+     * Установить пароль прокси.
+     *
+     * @param int $value
+     *
+     * @return $this
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setProxyPassword($value)
+    {
+        $this->setOption(CURLOPT_PROXYPASSWORD, $value);
+
+        return $this;
+    }
+
+    /**
+     * Установить опции, проверять или нет SSL со стороны прокси-сервера.
+     *
+     * @param bool $value Указать false, чтобы не проверять SSL, иначе - true.
+     *
+     * @return $this
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setProxySslNoVerify($value)
+    {
+        if (defined('CURLOPT_PROXY_SSL_VERIFYPEER')) {
+            $this->setOption(CURLOPT_PROXY_SSL_VERIFYPEER, $value);
+        }
+
+        if (defined('CURLOPT_PROXY_SSL_VERIFYHOST')) {
+            $this->setOption(CURLOPT_PROXY_SSL_VERIFYHOST, (false === $value ? 0 : 2));
+        }
 
         return $this;
     }
@@ -454,7 +508,7 @@ class CurlHelper
         $this->setOption(CURLOPT_SSL_VERIFYHOST, (false === $value ? 0 : 2));
 
         if (defined('CURLOPT_SSL_VERIFYSTATUS')) {
-            $this->setOption(CURLOPT_SSL_VERIFYSTATUS, $value); // This option is currently only supported by the OpenSSL, GnuTLS and NSS TLS backends.
+            $this->setOption(CURLOPT_SSL_VERIFYSTATUS, $value); // Эта опция, в настоящее время, поддерживается только бэкэндами OpenSSL, GnuTLS и NSS TLS.
         }
 
         return $this;
@@ -503,7 +557,7 @@ class CurlHelper
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    private function setSleepMaxSeconds($value)
+    protected function setSleepMaxSeconds($value)
     {
         $this->sleepMaxSeconds           = $value;
         $this->params['sleepMaxSeconds'] = $value;
@@ -520,7 +574,7 @@ class CurlHelper
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    private function setSleepMinSeconds($value)
+    protected function setSleepMinSeconds($value)
     {
         $this->sleepMinSeconds           = $value;
         $this->params['sleepMinSeconds'] = $value;
@@ -594,7 +648,7 @@ class CurlHelper
     public function setCaInfo($filePath)
     {
         if (false === file_exists($filePath)) {
-            throw new InvalidArgumentException('Файл сертификата не найден: ' . $filePath);
+            throw new LogicException('Файл сертификата не найден: ' . $filePath);
         }
 
         $this->setOption(CURLOPT_CAINFO, $filePath);
@@ -622,7 +676,7 @@ class CurlHelper
             $result = str_replace("\xEF\xBB\xBF", '', $result); // Removing UTF BOM (byte-order mark)
         }
 
-        $this->endTime   = microtime(true);
+        $this->endTime = microtime(true);
 
         return $result;
     }
@@ -666,7 +720,7 @@ class CurlHelper
     /**
      * Получить время выполнения запроса (в секундах).
      *
-     * @return int
+     * @return float
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
