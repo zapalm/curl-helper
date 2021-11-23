@@ -30,7 +30,7 @@ use LogicException;
  * }
  * ~~~
  *
- * @version 0.47.0
+ * @version 0.49.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -110,6 +110,8 @@ class CurlHelper
      *
      * @param string[] $options
      *
+     * @return $this
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function importOptions($options)
@@ -118,12 +120,16 @@ class CurlHelper
         foreach ($options as $option => $value) {
             $this->setOption($option, $value);
         }
+
+        return $this;
     }
 
     /**
      * Импортировать параметры запроса.
      *
      * @param string[] $params
+     *
+     * @return $this
      *
      * @throws LogicException
      *
@@ -142,6 +148,8 @@ class CurlHelper
 
             throw new LogicException('Не удалось установить параметр ' . $param . ' = ' . $value);
         }
+
+        return $this;
     }
 
     /**
@@ -533,6 +541,22 @@ class CurlHelper
     }
 
     /**
+     * Установить сетевой интерфейс.
+     *
+     * @param int $value
+     *
+     * @return $this
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setInterface($value)
+    {
+        $this->setOption(CURLOPT_INTERFACE, $value);
+
+        return $this;
+    }
+
+    /**
      * Установить режим автоматической установки referer.
      *
      * @param bool $value
@@ -703,6 +727,20 @@ class CurlHelper
     public function getErrorMessage()
     {
         return curl_error($this->curl);
+    }
+
+    /**
+     * Получить сообщение об ошибке по её коду.
+     *
+     * @param int $errorCode Код ошибки.
+     *
+     * @return string|null Вернёт описание ошибки или null, если ошибки нет.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getErrorMessageByCode($errorCode)
+    {
+        return curl_strerror($errorCode);
     }
 
     /**
