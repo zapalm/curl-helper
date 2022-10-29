@@ -288,7 +288,7 @@ class CurlHelper
     /**
      * Установить метод запроса POST.
      *
-     * @param bool $value
+     * @param bool $value Указать true, чтобы установить метод запроса POST, иначе - false, чтобы метод запроса GET.
      *
      * @return $this
      *
@@ -296,7 +296,18 @@ class CurlHelper
      */
     public function setPost($value)
     {
-        $this->setOption(CURLOPT_POST, $value);
+        $this->setOption(CURLOPT_CUSTOMREQUEST, null);
+
+        if (false === $value) {
+            // Сначала сбрасываем данные POST-запроса, если делается переход с POST на GET
+            $this->setPostFields(null);
+
+            $this->setOption(CURLOPT_HTTPGET, true);
+            $this->setOption(CURLOPT_POST, false);
+        } else {
+            $this->setOption(CURLOPT_HTTPGET, false);
+            $this->setOption(CURLOPT_POST, true);
+        }
 
         return $this;
     }
@@ -313,6 +324,20 @@ class CurlHelper
     public function setPostFields($value)
     {
         $this->setOption(CURLOPT_POSTFIELDS, $value);
+
+        return $this;
+    }
+
+    /**
+     * Установить метод запроса DELETE.
+     *
+     * @return static
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setDelete()
+    {
+        $this->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
 
         return $this;
     }
@@ -703,6 +728,53 @@ class CurlHelper
         $this->endTime = microtime(true);
 
         return $result;
+    }
+
+    /**
+     * Получить параметры запроса из URL.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getQuery()
+    {
+        $options = $this->exportOptions();
+        if ([] !== $options) {
+            if (isset($options[CURLOPT_POSTFIELDS])) {
+                return (string)$options[CURLOPT_POSTFIELDS];
+            }
+
+            if (isset($options[CURLOPT_URL])) {
+                return (string)parse_url($options[CURLOPT_URL], PHP_URL_QUERY);
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Получить время установки соединения.
+     *
+     * @return float Количество секунд.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getConnectionTime()
+    {
+        return curl_getinfo($this->curl, CURLINFO_CONNECT_TIME);
+    }
+
+    /**
+     * Получить количество секунд, которые были затрачены на передачу данных.
+     *
+     * @return float Количество секунд.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getTotalTime()
+    {
+        return curl_getinfo($this->curl, CURLINFO_TOTAL_TIME);
     }
 
     /**
