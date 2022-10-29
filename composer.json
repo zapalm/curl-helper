@@ -1,6 +1,7 @@
 {
   "name": "zapalm/curl-helper",
   "type": "library",
+  "version": "0.55.0",
   "description": "The simple PHP-library to do HTTP-requests.",
   "keywords": [
     "CURL",
