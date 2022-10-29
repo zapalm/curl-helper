@@ -4,6 +4,9 @@
   "description": "The simple PHP-library to do HTTP-requests.",
   "keywords": [
     "CURL",
+    "http-client",
+    "requests",
+    "php-library",
     "helper"
   ],
   "homepage": "https://github.com/zapalm/curl-helper",

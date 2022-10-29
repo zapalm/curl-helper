@@ -30,8 +30,6 @@ use LogicException;
  * }
  * ~~~
  *
- * @version 0.49.0
- *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class CurlHelper
@@ -110,7 +108,7 @@ class CurlHelper
      *
      * @param string[] $options
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -129,7 +127,7 @@ class CurlHelper
      *
      * @param string[] $params
      *
-     * @return $this
+     * @return static
      *
      * @throws LogicException
      *
@@ -178,7 +176,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -194,7 +192,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -210,7 +208,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -226,7 +224,7 @@ class CurlHelper
      *
      * @param string[] $value Список заголовков.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -242,7 +240,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -258,7 +256,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -274,7 +272,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -290,7 +288,7 @@ class CurlHelper
      *
      * @param bool $value Указать true, чтобы установить метод запроса POST, иначе - false, чтобы метод запроса GET.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -317,7 +315,7 @@ class CurlHelper
      *
      * @param string[]|string $value Параметры запроса.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -347,7 +345,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -363,7 +361,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -379,7 +377,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -395,7 +393,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -411,7 +409,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -429,7 +427,7 @@ class CurlHelper
      *
      * @param string $value Строка адреса в формате IP:port.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -445,7 +443,7 @@ class CurlHelper
      *
      * @param int $value Варианты констант: CURLPROXY_HTTP, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -461,7 +459,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -477,7 +475,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -493,7 +491,7 @@ class CurlHelper
      *
      * @param bool $value Указать false, чтобы не проверять SSL, иначе - true.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -515,7 +513,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -531,7 +529,7 @@ class CurlHelper
      *
      * @param bool $value Указать false, чтобы не проверять SSL, иначе - true.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -552,7 +550,7 @@ class CurlHelper
      *
      * @param int $value Протокол из списка CURL_IPRESOLVE_V4, CURL_IPRESOLVE_V6, CURL_IPRESOLVE_WHATEVER
      *
-     * @return $this
+     * @return static
      *
      * @see https://stackoverflow.com/questions/28366402/failed-to-connect-to-www-googleapis-com-port-443-network-unreachable
      *
@@ -570,7 +568,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -586,7 +584,7 @@ class CurlHelper
      *
      * @param bool $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -602,7 +600,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -619,7 +617,7 @@ class CurlHelper
      *
      * @param int $value
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -637,7 +635,7 @@ class CurlHelper
      * @param int $min Минимальная пауза.
      * @param int $max Максимальная пауза.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -654,7 +652,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @see setCookieFile()
      *
@@ -672,7 +670,7 @@ class CurlHelper
      *
      * @param string $value
      *
-     * @return $this
+     * @return static
      *
      * @see setCookieJar()
      *
@@ -690,7 +688,7 @@ class CurlHelper
      *
      * @param string $filePath Путь к файлу сертификата.
      *
-     * @return $this
+     * @return static
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
