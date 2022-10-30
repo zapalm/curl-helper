@@ -509,6 +509,43 @@ class CurlHelper
     }
 
     /**
+     * Получить локальный IP-адрес.
+     *
+     * @return string
+     *
+     * @see getLocalPort() Для получения локального порта.
+     */
+    public function getLocalIp()
+    {
+        return curl_getinfo($this->curl, CURLINFO_LOCAL_IP);
+    }
+
+    /**
+     * Получить локальный порт.
+     *
+     * @return string
+     *
+     * @see getLocalIp() Для получения локального IP-адреса.
+     */
+    public function getLocalPort()
+    {
+        return curl_getinfo($this->curl, CURLINFO_LOCAL_PORT);
+    }
+
+    /**
+     * Получить скорость загрузки.
+     *
+     * @return float Количество мегабайт.
+     */
+    public function getDownloadSpeed()
+    {
+        return round(
+            curl_getinfo($this->curl, CURLINFO_SPEED_DOWNLOAD) / 1024 / 1024,
+            4
+        );
+    }
+
+    /**
      * Установить подробный режим (для отладки).
      *
      * @param bool $value
