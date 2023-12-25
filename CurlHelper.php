@@ -751,7 +751,9 @@ class CurlHelper
             sleep(rand($this->sleepMinSeconds, $this->sleepMaxSeconds));
         }
 
-        $this->progressData->startTime = microtime(true);
+        $this->progressData->downloadedBytes   = null;
+        $this->progressData->downloadTimeCheck = null;
+        $this->progressData->startTime         = microtime(true);
 
         $result = curl_exec($this->curl);
         if (is_string($result)) {
