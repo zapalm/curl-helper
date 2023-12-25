@@ -49,11 +49,8 @@ class CurlHelper
     /** @var int Минимальная пауза между запросами (в секундах). */
     protected $sleepMinSeconds;
 
-    /** @var float Начало запроса. */
-    protected $startTime;
-
-    /** @var float Окончание запроса. */
-    protected $endTime;
+    /** @var CurlProgressData Данные о прогрессе загрузки. */
+    protected $progressData;
 
     /**
      * Конструктор.
@@ -62,7 +59,8 @@ class CurlHelper
      */
     public function __construct()
     {
-        $this->curl = curl_init(); // Никогда не возвращает false, поэтому проверка не нужна: https://github.com/phpstan/phpstan/issues/1274
+        $this->curl         = curl_init(); // Никогда не возвращает false, поэтому проверка не нужна: https://github.com/phpstan/phpstan/issues/1274
+        $this->progressData = new CurlProgressData();
 
         $this->setConnectTimeOut(10);
         $this->setTimeOut(30);
@@ -753,14 +751,14 @@ class CurlHelper
             sleep(rand($this->sleepMinSeconds, $this->sleepMaxSeconds));
         }
 
-        $this->startTime = microtime(true);
+        $this->progressData->startTime = microtime(true);
 
         $result = curl_exec($this->curl);
         if (is_string($result)) {
             $result = str_replace("\xEF\xBB\xBF", '', $result); // Removing UTF BOM (byte-order mark)
         }
 
-        $this->endTime = microtime(true);
+        $this->progressData->endTime = microtime(true);
 
         return $result;
     }
@@ -863,7 +861,7 @@ class CurlHelper
     }
 
     /**
-     * Получить время выполнения запроса (в секундах).
+     * Получить время выполнения запроса (в секундах с микросекундами).
      *
      * @return float
      *
@@ -871,7 +869,7 @@ class CurlHelper
      */
     public function getExecutionTime()
     {
-        return ($this->endTime - $this->startTime);
+        return (float)($this->progressData->endTime - $this->progressData->startTime);
     }
 
     /**
