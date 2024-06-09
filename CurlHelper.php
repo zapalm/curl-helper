@@ -49,6 +49,9 @@ class CurlHelper
     /** @var int Минимальная пауза между запросами (в секундах). */
     protected $sleepMinSeconds;
 
+    /** @var bool Удалить ли UTF-8 BOM (byte-order mark) из контента после запроса. */
+    protected $bomRemoving;
+
     /** @var CurlProgressData Данные о прогрессе загрузки. */
     protected $progressData;
 
@@ -65,6 +68,7 @@ class CurlHelper
         $this->setConnectTimeOut(10);
         $this->setTimeOut(30);
         $this->setCaInfo(__DIR__ . '/certificates/Mozilla_CA_certificate.pem');
+        $this->setBomRemoving(false);
     }
 
     /**
@@ -683,6 +687,23 @@ class CurlHelper
     }
 
     /**
+     * Установить, удалить ли UTF-8 BOM (byte-order mark) из контента после запроса.
+     *
+     * @param bool $value
+     *
+     * @return static
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setBomRemoving($value)
+    {
+        $this->bomRemoving           = $value;
+        $this->params['bomRemoving'] = $value;
+
+        return $this;
+    }
+
+    /**
      * Установить файл для хранения Cookie.
      *
      * @param string $value
@@ -756,8 +777,8 @@ class CurlHelper
         $this->progressData->startTime         = microtime(true);
 
         $result = curl_exec($this->curl);
-        if (is_string($result)) {
-            $result = str_replace("\xEF\xBB\xBF", '', $result); // Removing UTF BOM (byte-order mark)
+        if (is_string($result) && $this->bomRemoving) {
+            $result = str_replace("\xEF\xBB\xBF", '', $result);
         }
 
         $this->progressData->endTime = microtime(true);
