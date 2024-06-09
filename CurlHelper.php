@@ -37,16 +37,16 @@ class CurlHelper
     /** @var resource Ресурс CURL. */
     protected $curl;
 
-    /** @var string[] Опции настройки CURL. */
+    /** @var array Опции настройки CURL. */
     private $options = [];
 
-    /** @var string[] Параметры запроса. */
+    /** @var array Параметры CurlHelper. */
     private $params = [];
 
-    /** @var int Максимальная пауза между запросами (в секундах). */
+    /** @var int|null Максимальная пауза между запросами (в секундах). */
     protected $sleepMaxSeconds;
 
-    /** @var int Минимальная пауза между запросами (в секундах). */
+    /** @var int|null Минимальная пауза между запросами (в секундах). */
     protected $sleepMinSeconds;
 
     /** @var bool Удалить ли UTF-8 BOM (byte-order mark) из контента после запроса. */
@@ -84,7 +84,7 @@ class CurlHelper
     /**
      * Экспортировать опции настройки CURL.
      *
-     * @return string[]
+     * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -94,9 +94,9 @@ class CurlHelper
     }
 
     /**
-     * Экспортировать параметры запроса.
+     * Экспортировать параметры CurlHelper.
      *
-     * @return string[]
+     * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -108,7 +108,7 @@ class CurlHelper
     /**
      * Импортировать опции настройки CURL.
      *
-     * @param string[] $options
+     * @param array $options
      *
      * @return static
      *
@@ -125,9 +125,9 @@ class CurlHelper
     }
 
     /**
-     * Импортировать параметры запроса.
+     * Импортировать параметры CurlHelper.
      *
-     * @param string[] $params
+     * @param array $params
      *
      * @return static
      *
@@ -153,10 +153,10 @@ class CurlHelper
     }
 
     /**
-     * Установить опцию.
+     * Установить опцию CURL.
      *
-     * @param int             $option
-     * @param string|string[] $value
+     * @param int   $option
+     * @param mixed $value
      *
      * @throws LogicException
      *
@@ -516,6 +516,8 @@ class CurlHelper
      * @return string
      *
      * @see getLocalPort() Для получения локального порта.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public function getLocalIp()
     {
@@ -528,6 +530,8 @@ class CurlHelper
      * @return string
      *
      * @see getLocalIp() Для получения локального IP-адреса.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public function getLocalPort()
     {
@@ -538,6 +542,8 @@ class CurlHelper
      * Получить скорость загрузки.
      *
      * @return float Количество мегабайт.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public function getDownloadSpeed()
     {
