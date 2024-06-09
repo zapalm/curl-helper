@@ -112,10 +112,16 @@ class CurlHelper
      *
      * @return static
      *
+     * @throws LogicException
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function importOptions($options)
     {
+        if ([] === $options) {
+            throw new LogicException();
+        }
+
         $this->options = [];
         foreach ($options as $option => $value) {
             $this->setOption($option, $value);
@@ -137,6 +143,10 @@ class CurlHelper
      */
     public function importParams($params)
     {
+        if ([] === $params) {
+            throw new LogicException();
+        }
+
         $this->params = [];
         foreach ($params as $param => $value) {
             if (property_exists($this, $param)) {
