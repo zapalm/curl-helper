@@ -38,10 +38,10 @@ class CurlHelper
     protected $curl;
 
     /** @var array Опции настройки CURL. */
-    private $options = [];
+    protected $options = [];
 
     /** @var array Параметры CurlHelper. */
-    private $params = [];
+    protected $params = [];
 
     /** @var int|null Максимальная пауза между запросами (в секундах). */
     protected $sleepMaxSeconds;
