@@ -43,13 +43,13 @@ class CurlHelper
     /** @var array Параметры CurlHelper. */
     protected $params = [];
 
-    /** @var int|null Максимальная пауза между запросами (в секундах). */
+    /** @var int|null Параметр CurlHelper - максимальная пауза между запросами (в секундах). См. {@see setSleepMaxSeconds()}.  */
     protected $sleepMaxSeconds;
 
-    /** @var int|null Минимальная пауза между запросами (в секундах). */
+    /** @var int|null Параметр CurlHelper - минимальная пауза между запросами (в секундах). См. {@see setSleepMinSeconds()}. */
     protected $sleepMinSeconds;
 
-    /** @var bool Удалить ли UTF-8 BOM (byte-order mark) из контента после запроса. */
+    /** @var bool Параметр CurlHelper - удалить ли UTF-8 BOM (byte-order mark) из контента после запроса. См. {@see setBomRemoving()}. */
     protected $bomRemoving;
 
     /** @var CurlProgressData Данные о прогрессе загрузки. */
