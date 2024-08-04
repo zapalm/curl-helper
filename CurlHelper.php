@@ -218,7 +218,7 @@ class CurlHelper
     /**
      * Установить предел ожидания ответа на запрос в секундах.
      *
-     * @param int $value
+     * @param int $value Таймаут в секундах, который больше или равен нулю (при нуле на ожидание ответа не будет накладываться ограничение).
      *
      * @return static
      *
@@ -227,6 +227,8 @@ class CurlHelper
     public function setTimeOut($value)
     {
         $this->setOption(CURLOPT_TIMEOUT, $value);
+        $this->setOption(CURLOPT_NOPROGRESS, true);               // Отключаем функцию прогресса, если вдруг она была включена ранее
+        curl_setopt($this->curl, CURLOPT_PROGRESSFUNCTION, null); // Удаляем функцию прогресса на всякий случай по той же причине (так сразу, возможно, высвободим память)
 
         return $this;
     }
