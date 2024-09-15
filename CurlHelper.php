@@ -282,11 +282,13 @@ class CurlHelper
     }
 
     /**
-     * Установить Cookie.
+     * Установить список Cookies.
      *
-     * @param string $value
+     * @param string $value Строка в формате "CookieName1=CookieValue1; CookieName2=CookieValue2".
      *
      * @return static
+     *
+     * @see setCookieFile()
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -722,9 +724,9 @@ class CurlHelper
     }
 
     /**
-     * Установить файл для хранения Cookie.
+     * Установить файл для автоматического сохранения Cookies при ответе сервера на запрос.
      *
-     * @param string $value
+     * @param string $value Путь к файлу для записи Cookies.
      *
      * @return static
      *
@@ -740,9 +742,12 @@ class CurlHelper
     }
 
     /**
-     * Установить файл для хранения Cookie.
+     * Установить файл со списком Cookies для отправки при запросе.
      *
-     * @param string $value
+     * Возможно совместное применение этого метода с методом {@see setCookie()}, но не без нюанса - списки Cookies будут
+     * конкатенированы, т.е. одна из Cookie с тем же наименованием, но с другим значением не будет объединена/перезаписана.
+     *
+     * @param string $value Путь к файлу в формате Netscape, см. {@link https://curl.se/docs/http-cookies.html}.
      *
      * @return static
      *
@@ -914,11 +919,21 @@ class CurlHelper
     }
 
     /**
-     * Разобрать cookie.
+     * Извлечь список Cookies из контента заголовка.
+     *
+     * Метод сделан для удобства работы с методом {@see setCookie()}, поэтому он для него возвращает строку в нужном формате.
+     *
+     * Если нужен массив, то его можно получить так:
+     * ~~~
+     * $cookies = explode('; ', CurlHelper::parseCookie($headerContent));
+     * ~~~
+     * Но это будет нумерованный массив, а не ассоциативный в виде "Наименование Cookie => Значение Cookie" и ещё параметры
+     * будут экранированы с помощью {@see urlencode()} при наличии специальных символов, поэтому может потребоваться
+     * применить {@see urldecode()}.
      *
      * @param string $headerContent Контент заголовка ответа.
      *
-     * @return string|null Строка с куками или null, если не найдены в заголовке.
+     * @return string|null Строка со списком Cookies или null, если не были найдены в заголовке.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -932,7 +947,9 @@ class CurlHelper
                 $cookies = array_merge($cookies, $cookie);
             }
 
-            return http_build_query($cookies, null, ';');
+            // Собираем заново в одну строку этой функцией, т.к. подходит идеально - разделитель может состоять более, чем из
+            // одно символа и он не экранируется; применяется по-умолчанию нужное экранирование параметров (PHP_QUERY_RFC1738).
+            return http_build_query($cookies, '', '; ');
         }
 
         return null;
