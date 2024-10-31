@@ -1,4 +1,13 @@
 <?php
+/**
+ * CURL helper - это полностью документированная на русском PHP-библиотека для отправки HTTP-запросов.
+ *
+ * @author    Maksim T. <zapalm@yandex.com>
+ * @copyright 2018 Maksim T.
+ * @license   https://opensource.org/licenses/MIT MIT
+ * @link      https://github.com/zapalm/curl-helper GitHub
+ */
+
 namespace zapalm\curlHelper;
 
 /**
