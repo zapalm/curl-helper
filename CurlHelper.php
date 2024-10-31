@@ -1,6 +1,6 @@
 <?php
 /**
- * CURL helper - the simple PHP-library to do HTTP-requests.
+ * CURL helper - это полностью документированная на русском PHP-библиотека для отправки HTTP-запросов.
  *
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
@@ -13,22 +13,7 @@ namespace zapalm\curlHelper;
 use LogicException;
 
 /**
- * CURL helper.
- *
- * Example:
- * ~~~
- * $helper = (new CurlHelper())
- *     ->setPost(false)
- *     ->setReturn(true)
- *     ->setHeader(false)
- *     ->setUserAgent('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393')
- *     ->setUrl('https://www.google.com/search?q=hello+world')
- * ;
- * $result = $helper->execute();
- * if (false === $result) {
- *     $errorMessage = $helper->getErrorMessage();
- * }
- * ~~~
+ * Класс CurlHelper (основной класс библиотеки) для отправки HTTP-запросов.
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
