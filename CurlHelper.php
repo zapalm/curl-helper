@@ -37,23 +37,23 @@ class CurlHelper
     /** @var resource Ресурс CURL. */
     protected $curl;
 
-    /** @var string[] Опции настройки CURL. */
-    private $options = [];
+    /** @var array Опции настройки CURL. */
+    protected $options = [];
 
-    /** @var string[] Параметры запроса. */
-    private $params = [];
+    /** @var array Параметры CurlHelper. */
+    protected $params = [];
 
-    /** @var int Максимальная пауза между запросами (в секундах). */
+    /** @var int|null Параметр CurlHelper - максимальная пауза между запросами (в секундах). См. {@see setSleepMaxSeconds()}.  */
     protected $sleepMaxSeconds;
 
-    /** @var int Минимальная пауза между запросами (в секундах). */
+    /** @var int|null Параметр CurlHelper - минимальная пауза между запросами (в секундах). См. {@see setSleepMinSeconds()}. */
     protected $sleepMinSeconds;
 
-    /** @var float Начало запроса. */
-    protected $startTime;
+    /** @var bool Параметр CurlHelper - удалить ли UTF-8 BOM (byte-order mark) из контента после запроса. См. {@see setBomRemoving()}. */
+    protected $bomRemoving;
 
-    /** @var float Окончание запроса. */
-    protected $endTime;
+    /** @var CurlProgressData Данные о прогрессе загрузки. */
+    protected $progressData;
 
     /**
      * Конструктор.
@@ -62,11 +62,13 @@ class CurlHelper
      */
     public function __construct()
     {
-        $this->curl = curl_init(); // Никогда не возвращает false, поэтому проверка не нужна: https://github.com/phpstan/phpstan/issues/1274
+        $this->curl         = curl_init(); // Никогда не возвращает false, поэтому проверка не нужна: https://github.com/phpstan/phpstan/issues/1274
+        $this->progressData = new CurlProgressData();
 
         $this->setConnectTimeOut(10);
         $this->setTimeOut(30);
         $this->setCaInfo(__DIR__ . '/certificates/Mozilla_CA_certificate.pem');
+        $this->setBomRemoving(false);
     }
 
     /**
@@ -82,7 +84,7 @@ class CurlHelper
     /**
      * Экспортировать опции настройки CURL.
      *
-     * @return string[]
+     * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -92,9 +94,9 @@ class CurlHelper
     }
 
     /**
-     * Экспортировать параметры запроса.
+     * Экспортировать параметры CurlHelper.
      *
-     * @return string[]
+     * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -106,14 +108,20 @@ class CurlHelper
     /**
      * Импортировать опции настройки CURL.
      *
-     * @param string[] $options
+     * @param array $options
      *
      * @return static
+     *
+     * @throws LogicException
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function importOptions($options)
     {
+        if ([] === $options) {
+            throw new LogicException();
+        }
+
         $this->options = [];
         foreach ($options as $option => $value) {
             $this->setOption($option, $value);
@@ -123,9 +131,9 @@ class CurlHelper
     }
 
     /**
-     * Импортировать параметры запроса.
+     * Импортировать параметры CurlHelper.
      *
-     * @param string[] $params
+     * @param array $params
      *
      * @return static
      *
@@ -135,6 +143,10 @@ class CurlHelper
      */
     public function importParams($params)
     {
+        if ([] === $params) {
+            throw new LogicException();
+        }
+
         $this->params = [];
         foreach ($params as $param => $value) {
             if (property_exists($this, $param)) {
@@ -151,10 +163,10 @@ class CurlHelper
     }
 
     /**
-     * Установить опцию.
+     * Установить опцию CURL.
      *
-     * @param int             $option
-     * @param string|string[] $value
+     * @param int   $option
+     * @param mixed $value
      *
      * @throws LogicException
      *
@@ -206,7 +218,7 @@ class CurlHelper
     /**
      * Установить предел ожидания ответа на запрос в секундах.
      *
-     * @param int $value
+     * @param int $value Таймаут в секундах, который больше или равен нулю (при нуле на ожидание ответа не будет накладываться ограничение).
      *
      * @return static
      *
@@ -215,6 +227,8 @@ class CurlHelper
     public function setTimeOut($value)
     {
         $this->setOption(CURLOPT_TIMEOUT, $value);
+        $this->setOption(CURLOPT_NOPROGRESS, true);               // Отключаем функцию прогресса, если вдруг она была включена ранее
+        curl_setopt($this->curl, CURLOPT_PROGRESSFUNCTION, null); // Удаляем функцию прогресса на всякий случай по той же причине (так сразу, возможно, высвободим память)
 
         return $this;
     }
@@ -268,11 +282,13 @@ class CurlHelper
     }
 
     /**
-     * Установить Cookie.
+     * Установить список Cookies.
      *
-     * @param string $value
+     * @param string $value Строка в формате "CookieName1=CookieValue1; CookieName2=CookieValue2".
      *
      * @return static
+     *
+     * @see setCookieFile()
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -509,6 +525,49 @@ class CurlHelper
     }
 
     /**
+     * Получить локальный IP-адрес.
+     *
+     * @return string
+     *
+     * @see getLocalPort() Для получения локального порта.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getLocalIp()
+    {
+        return curl_getinfo($this->curl, CURLINFO_LOCAL_IP);
+    }
+
+    /**
+     * Получить локальный порт.
+     *
+     * @return string
+     *
+     * @see getLocalIp() Для получения локального IP-адреса.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getLocalPort()
+    {
+        return curl_getinfo($this->curl, CURLINFO_LOCAL_PORT);
+    }
+
+    /**
+     * Получить скорость загрузки.
+     *
+     * @return float Количество мегабайт.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getDownloadSpeed()
+    {
+        return round(
+            curl_getinfo($this->curl, CURLINFO_SPEED_DOWNLOAD) / 1024 / 1024,
+            4
+        );
+    }
+
+    /**
      * Установить подробный режим (для отладки).
      *
      * @param bool $value
@@ -648,9 +707,26 @@ class CurlHelper
     }
 
     /**
-     * Установить файл для хранения Cookie.
+     * Установить, удалить ли UTF-8 BOM (byte-order mark) из контента после запроса.
      *
-     * @param string $value
+     * @param bool $value
+     *
+     * @return static
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setBomRemoving($value)
+    {
+        $this->bomRemoving           = $value;
+        $this->params['bomRemoving'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Установить файл для автоматического сохранения Cookies при ответе сервера на запрос.
+     *
+     * @param string $value Путь к файлу для записи Cookies.
      *
      * @return static
      *
@@ -666,9 +742,12 @@ class CurlHelper
     }
 
     /**
-     * Установить файл для хранения Cookie.
+     * Установить файл со списком Cookies для отправки при запросе.
      *
-     * @param string $value
+     * Возможно совместное применение этого метода с методом {@see setCookie()}, но не без нюанса - списки Cookies будут
+     * конкатенированы, т.е. одна из Cookie с тем же наименованием, но с другим значением не будет объединена/перезаписана.
+     *
+     * @param string $value Путь к файлу в формате Netscape, см. {@link https://curl.se/docs/http-cookies.html}.
      *
      * @return static
      *
@@ -716,14 +795,16 @@ class CurlHelper
             sleep(rand($this->sleepMinSeconds, $this->sleepMaxSeconds));
         }
 
-        $this->startTime = microtime(true);
+        $this->progressData->downloadedBytes   = null;
+        $this->progressData->downloadTimeCheck = null;
+        $this->progressData->startTime         = microtime(true);
 
         $result = curl_exec($this->curl);
-        if (is_string($result)) {
-            $result = str_replace("\xEF\xBB\xBF", '', $result); // Removing UTF BOM (byte-order mark)
+        if (is_string($result) && $this->bomRemoving) {
+            $result = str_replace("\xEF\xBB\xBF", '', $result);
         }
 
-        $this->endTime = microtime(true);
+        $this->progressData->endTime = microtime(true);
 
         return $result;
     }
@@ -826,7 +907,7 @@ class CurlHelper
     }
 
     /**
-     * Получить время выполнения запроса (в секундах).
+     * Получить время выполнения запроса (в секундах с микросекундами).
      *
      * @return float
      *
@@ -834,15 +915,25 @@ class CurlHelper
      */
     public function getExecutionTime()
     {
-        return ($this->endTime - $this->startTime);
+        return (float)($this->progressData->endTime - $this->progressData->startTime);
     }
 
     /**
-     * Разобрать cookie.
+     * Извлечь список Cookies из контента заголовка.
+     *
+     * Метод сделан для удобства работы с методом {@see setCookie()}, поэтому он для него возвращает строку в нужном формате.
+     *
+     * Если нужен массив, то его можно получить так:
+     * ~~~
+     * $cookies = explode('; ', CurlHelper::parseCookie($headerContent));
+     * ~~~
+     * Но это будет нумерованный массив, а не ассоциативный в виде "Наименование Cookie => Значение Cookie" и ещё параметры
+     * будут экранированы с помощью {@see urlencode()} при наличии специальных символов, поэтому может потребоваться
+     * применить {@see urldecode()}.
      *
      * @param string $headerContent Контент заголовка ответа.
      *
-     * @return string|null Строка с куками или null, если не найдены в заголовке.
+     * @return string|null Строка со списком Cookies или null, если не были найдены в заголовке.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -856,7 +947,9 @@ class CurlHelper
                 $cookies = array_merge($cookies, $cookie);
             }
 
-            return http_build_query($cookies, null, ';');
+            // Собираем заново в одну строку этой функцией, т.к. подходит идеально - разделитель может состоять более, чем из
+            // одно символа и он не экранируется; применяется по-умолчанию нужное экранирование параметров (PHP_QUERY_RFC1738).
+            return http_build_query($cookies, '', '; ');
         }
 
         return null;

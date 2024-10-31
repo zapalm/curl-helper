@@ -1,5 +1,6 @@
 # CURL helper
-CURL helper is the full documented (for now in Russian) simple PHP-library to do HTTP-requests.
+CURL helper is the full documented (for now in Russian) simple PHP-library to do HTTP-requests. 
+It's simple, reusable, expansible and has specific settings.
 Example:
 ~~~
 $helper = (new CurlHelper())
