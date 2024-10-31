@@ -455,9 +455,9 @@ class CurlHelper
     }
 
     /**
-     * Установить proxy.
+     * Установить адрес прокси.
      *
-     * @param string $value Строка адреса в формате IP:port.
+     * @param string|null $value Строка адреса в формате IP:port или null для сброса значения.
      *
      * @return static
      *
@@ -473,7 +473,7 @@ class CurlHelper
     /**
      * Установить тип прокси.
      *
-     * @param int $value Варианты констант: CURLPROXY_HTTP, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4.
+     * @param int|null $value Варианты констант: CURLPROXY_HTTP, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4. Или null для сброса значения.
      *
      * @return static
      *
@@ -489,7 +489,7 @@ class CurlHelper
     /**
      * Установить пользователя прокси.
      *
-     * @param int $value
+     * @param string|null $value Логин или null для сброса значения.
      *
      * @return static
      *
@@ -505,7 +505,7 @@ class CurlHelper
     /**
      * Установить пароль прокси.
      *
-     * @param int $value
+     * @param string|null $value Пароль или null для сброса значения.
      *
      * @return static
      *
@@ -641,7 +641,7 @@ class CurlHelper
     /**
      * Установить сетевой интерфейс.
      *
-     * @param int $value
+     * @param string|null $value Интерфейс в формате IP-адреса или наименования интерфейса, например: "eth0". Или null для сброса значения.
      *
      * @return static
      *
